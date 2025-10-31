@@ -367,14 +367,13 @@ async def create_embedding(
         # Update vector store statistics
         await db.query_raw(
             f"""
-            UPDATE {vector_store_table} 
+            UPDATE {vector_store_table}
             SET file_counts = jsonb_set(
-                    COALESCE(file_counts, '{{"in_progress": 0, "completed": 0, "failed": 0, "cancelled": 0, "total": 0}}'::jsonb),
-                    '{{completed}}',
-                    (COALESCE(file_counts->>'completed', '0')::int + 1)::text::jsonb
-                ),
-                file_counts = jsonb_set(
-                    file_counts,
+                    jsonb_set(
+                        COALESCE(file_counts, '{{"in_progress": 0, "completed": 0, "failed": 0, "cancelled": 0, "total": 0}}'::jsonb),
+                        '{{completed}}',
+                        (COALESCE(file_counts->>'completed', '0')::int + 1)::text::jsonb
+                    ),
                     '{{total}}',
                     (COALESCE(file_counts->>'total', '0')::int + 1)::text::jsonb
                 ),
@@ -467,14 +466,13 @@ async def create_embeddings_batch(
         # Update vector store statistics
         await db.query_raw(
             f"""
-            UPDATE {vector_store_table} 
+            UPDATE {vector_store_table}
             SET file_counts = jsonb_set(
-                    COALESCE(file_counts, '{{"in_progress": 0, "completed": 0, "failed": 0, "cancelled": 0, "total": 0}}'::jsonb),
-                    '{{completed}}',
-                    (COALESCE(file_counts->>'completed', '0')::int + $2)::text::jsonb
-                ),
-                file_counts = jsonb_set(
-                    file_counts,
+                    jsonb_set(
+                        COALESCE(file_counts, '{{"in_progress": 0, "completed": 0, "failed": 0, "cancelled": 0, "total": 0}}'::jsonb),
+                        '{{completed}}',
+                        (COALESCE(file_counts->>'completed', '0')::int + $2)::text::jsonb
+                    ),
                     '{{total}}',
                     (COALESCE(file_counts->>'total', '0')::int + $2)::text::jsonb
                 ),
